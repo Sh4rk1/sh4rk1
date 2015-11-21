@@ -6,26 +6,48 @@ import java.util.ArrayList;
  */
 public class RSSList {
     public ArrayList<String> RSSList = new ArrayList<String>();
+    public ArrayList<String> RSSHistory = new ArrayList<>();
+    private String file;
 
-    public void SaveList() throws IOException {
-        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("list.bin"));
-        outputStream.writeObject(RSSList);
-        outputStream.close();
-
-    }
-
-    public void readList() throws IOException, ClassNotFoundException {
+    public void ReadFile() throws IOException, ClassNotFoundException {
         try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("list.bin"));
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
             RSSList = (ArrayList<String>) objectInputStream.readObject();
             objectInputStream.close();
 
         } catch (FileNotFoundException e) {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("list.bin"));
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
             outputStream.writeObject(RSSList);
             outputStream.close();
-            readList();
-
+            ReadFile();
         }
     }
+
+    public void SaveFile() throws IOException {
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file));
+        outputStream.writeObject(RSSList);
+        outputStream.close();
+    }
+
+
+    public void saveCurrentlyList() throws IOException {
+        file = "list.bin";
+        SaveFile();
+
+    }
+
+    public void readCurrentlyList() throws IOException, ClassNotFoundException {
+        file = "list.bin";
+        ReadFile();
+    }
+
+    public void readHistory() throws IOException, ClassNotFoundException {
+        file = "history.bin";
+        ReadFile();
+    }
+    public void saveHistory() throws IOException {
+        file = "history.bin";
+        SaveFile();
+    }
 }
+
